@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ProofSignal — GenLayer claim verification</title>
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#171717;background:#f7f7f5}*{box-sizing:border-box}body{max-width:760px;margin:0 auto;padding:48px 20px}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:48px}h1{font-size:clamp(2rem,6vw,4rem);letter-spacing:-.06em;margin:0}.tag{color:#ff6b35;font-weight:700}.card{background:#fff;border:1px solid #ddd;border-radius:20px;padding:24px;box-shadow:0 10px 35px #0000000b}label{display:block;font-weight:700;margin:16px 0 8px}textarea,input{width:100%;padding:14px;border:1px solid #ccc;border-radius:10px;font:inherit}textarea{min-height:110px;resize:vertical}button{margin-top:20px;border:0;border-radius:999px;background:#ff6b35;color:#fff;font-weight:800;padding:14px 20px;cursor:pointer}button:disabled{opacity:.5}.status{margin-top:20px;padding:16px;border-radius:12px;background:#f0f0ed;white-space:pre-wrap}.small{color:#666;font-size:.9rem;line-height:1.5}
+  </style>
+</head>
+<body>
+  <header><div><div class="tag">GENLAYER / PROOFSIGNAL</div><h1>Can we trust it?</h1></div><button id="connect" type="button">Connect wallet</button></header>
+  <main class="card">
+    <p class="small">Submit a crypto claim and a public source. ProofSignal asks GenLayer validators to independently inspect the evidence and reach a consensus-backed verdict.</p>
+    <label for="claim">Claim</label><textarea id="claim" placeholder="Example: The protocol's testnet is live and open to the public."></textarea>
+    <label for="source">Public source URL</label><input id="source" type="url" placeholder="https://...">
+    <button id="verify" type="button">Verify with GenLayer</button>
+    <div id="status" class="status" hidden></div>
+  </main>
+  <script>
+    // Set CONTRACT_ADDRESS after deployment. The write call is wired in the next implementation step.
+    const CONTRACT_ADDRESS = "";
+    const $ = (id) => document.getElementById(id);
+    $("connect").onclick = async () => {
+      if (!window.ethereum) return $("status").textContent = "Install a compatible wallet to connect.";
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+      $("connect").textContent = "Wallet connected";
+    };
+    $("verify").onclick = () => {
+      const claim = $("claim").value.trim(), source = $("source").value.trim();
+      $("status").hidden = false;
+      if (!claim || !source) return $("status").textContent = "Enter both a claim and a source URL.";
+      if (!CONTRACT_ADDRESS) return $("status").textContent = "Contract configuration is pending deployment.";
+      $("status").textContent = "Ready to submit to the ProofSignal Intelligent Contract.";
+    };
+  </script>
+</body>
+</html>
+
